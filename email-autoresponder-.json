@@ -1,0 +1,178 @@
+{
+  "createdAt": "2025-07-08T14:17:23.573Z",
+  "updatedAt": "2025-07-08T15:16:27.000Z",
+  "id": "6kR9YSIh7bCrY2WE",
+  "name": "Email Autoresponder",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 2,
+      "position": [
+        -900,
+        -480
+      ],
+      "id": "3220c0c5-1bc2-453d-9299-766db1ba1adf",
+      "name": "Email Trigger (IMAP)",
+      "credentials": {
+        "imap": {
+          "id": "BP5fkwznPzUh0yr0",
+          "name": "IMAP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "524e782e-e0d1-4d2b-9303-1584be68efdd",
+              "name": "textPlain",
+              "value": "={{ $json.textPlain }}",
+              "type": "string"
+            },
+            {
+              "id": "290761a3-45c1-4d3d-9c96-91ed42305c7d",
+              "name": "subject",
+              "value": "={{ $json.subject }}",
+              "type": "string"
+            },
+            {
+              "id": "fa154ec5-b3b9-4ca8-95c4-f2e2420457d8",
+              "name": "date",
+              "value": "={{ $json.date }}",
+              "type": "string"
+            },
+            {
+              "id": "d8e54ce3-e46d-40bc-8bd0-a2790f6f88b7",
+              "name": "from",
+              "value": "={{ $json.from }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": "={{ false }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -660,
+        -400
+      ],
+      "id": "d1cdfc7c-b380-49fe-af7e-9a16406550bc",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://192.168.1.228/post",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "User-Agent",
+              "value": "n8n"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "message",
+              "value": "={{ $json.textPlain }}"
+            },
+            {
+              "name": "subject",
+              "value": "={{ $json.subject }}"
+            },
+            {
+              "name": "date",
+              "value": "={{ $json.date }}"
+            },
+            {
+              "name": "from",
+              "value": "={{ $json.from }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -460,
+        -320
+      ],
+      "id": "13468752-d751-49be-aeb9-e623b52f6151",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "operation": "sendTemplate",
+        "additionalFields": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.sendInBlue",
+      "typeVersion": 1,
+      "position": [
+        -260,
+        -240
+      ],
+      "id": "dbfd80ce-1da9-403e-a8e4-49ecfbfe201e",
+      "name": "Send an email with an existing Template",
+      "disabled": true
+    }
+  ],
+  "connections": {
+    "Email Trigger (IMAP)": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Send an email with an existing Template",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "64afcadc-ae60-4e85-b500-7725bd606ba0",
+  "triggerCount": 0,
+  "tags": []
+}
