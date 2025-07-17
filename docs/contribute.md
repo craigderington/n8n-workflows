@@ -1,5 +1,6 @@
-Contributing to CraigDerington's n8n Workflows Backup Repository 🤝
+🤝 Contributing to this n8n Workflows Backup Repository 
 Thank you for your interest in contributing to the n8n Workflows Backup Repository! This project is a dedicated space for backing up and sharing n8n workflows, and we welcome contributions to make it even better. Whether you're adding workflows, improving documentation, or suggesting enhancements, your input is valued! 🚀
+
 📋 Table of Contents
 
 How to Contribute
@@ -13,9 +14,11 @@ Contact
 Fork the Repository: Click "Fork" on GitHub.
 Clone Your Fork:git clone https://github.com/YOUR-USERNAME/n8n-workflows.git
 
+Create a Branch:
 
-Create a Branch:git checkout -b feature/your-contribution
-
+```
+git checkout -b feature/your-contribution
+```
 
 Make Changes: Add workflows, update docs, or fix issues.
 Commit Changes: Use clear commit messages (e.g., "Add Slack notification workflow").
