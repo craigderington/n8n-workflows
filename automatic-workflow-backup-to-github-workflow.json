@@ -1,0 +1,440 @@
+{
+  "createdAt": "2025-07-17T19:12:42.896Z",
+  "updatedAt": "2025-07-17T20:12:37.000Z",
+  "id": "2pBi26jZwxyfJCGG",
+  "name": "Automatic Workflow Backup to Github",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 5,
+              "triggerAtMinute": 30
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -640,
+        -160
+      ],
+      "id": "281a1462-c9aa-4f12-ad89-01aa4810c173",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "filters": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.n8n",
+      "typeVersion": 1,
+      "position": [
+        -200,
+        -160
+      ],
+      "id": "7daf1ed3-cac4-4911-98bd-22299afb9713",
+      "name": "Get many workflows",
+      "credentials": {
+        "n8nApi": {
+          "id": "Z09Mz2zKJxqIY4yi",
+          "name": "n8n account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const obj = $input.first().json;\nconst jsonString = JSON.stringify(obj, null, 2);\n\nreturn [{\n  json: {\n      fileName: $input.first().json.name + \".json\",\n      rawJson: jsonString\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        20,
+        -160
+      ],
+      "id": "c3c63ccc-2f05-4765-88fe-eeb8579a231b",
+      "name": "GetRawJSON"
+    },
+    {
+      "parameters": {
+        "operation": "toJson",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        240,
+        -160
+      ],
+      "id": "114e4d56-b893-4275-9041-8af45513f79d",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "operation": "binaryToPropery",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        460,
+        -160
+      ],
+      "id": "d71a9be3-575e-427b-b810-e6449256e9dd",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d6fd150d-f7bc-4f05-ab7b-5cdb76f88528",
+              "name": "data",
+              "value": "={{ $json.data }}",
+              "type": "string"
+            },
+            {
+              "id": "928a6156-e07d-4dd9-8dc9-fe3eda7563d5",
+              "name": "name",
+              "value": "={{ $('GetRawJSON').item.json.fileName }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        680,
+        -160
+      ],
+      "id": "b7a0e6a5-ad1c-4a96-82e4-e156468c0fe5",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "edit",
+        "owner": {
+          "__rl": true,
+          "value": "https://github.com/craigderington",
+          "mode": "url"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "n8n-workflows",
+          "mode": "list",
+          "cachedResultName": "n8n-workflows",
+          "cachedResultUrl": "https://github.com/craigderington/n8n-workflows"
+        },
+        "filePath": "={{ $json.name }}",
+        "fileContent": "={{ $('Extract from File').item.json.data }}",
+        "commitMessage": "n8n workflow backup"
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        1120,
+        -260
+      ],
+      "id": "f221d07d-1ad6-40b1-aa2f-a2e30ef41462",
+      "name": "Edit a file",
+      "webhookId": "24394508-df08-4cf4-981b-86280db4ec57",
+      "credentials": {
+        "githubApi": {
+          "id": "I1cYP94kQZZULbBd",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ab7ddf67-d680-487f-ab1f-b901fc74cec2",
+              "leftValue": "={{ $json.name }}",
+              "rightValue": "={{ $('GetRawJSON').item.json.fileName }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "612cd25a-1c1b-4e03-835b-4c69ce875ffb",
+              "leftValue": "",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        900,
+        -160
+      ],
+      "id": "38734182-4482-4287-8407-db7488454545",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "list",
+        "owner": {
+          "__rl": true,
+          "value": "https://github.com/craigderington",
+          "mode": "url"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "n8n-workflows",
+          "mode": "list",
+          "cachedResultName": "n8n-workflows",
+          "cachedResultUrl": "https://github.com/craigderington/n8n-workflows"
+        },
+        "filePath": "/"
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        -420,
+        -160
+      ],
+      "id": "e23bd142-3913-4965-984e-7d0685875bcb",
+      "name": "List files",
+      "webhookId": "03ab92da-532a-4cbc-8367-c60b33e969d4",
+      "credentials": {
+        "githubApi": {
+          "id": "I1cYP94kQZZULbBd",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "subject": "n8n Automation Backup Completed",
+        "sender": "n8n.docker.auto@gmail.com",
+        "receipients": "craig@craigderington.dev",
+        "additionalFields": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.sendInBlue",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        -160
+      ],
+      "id": "9d36f785-9280-41d3-995d-573bad5e56c8",
+      "name": "Send a transactional email",
+      "credentials": {
+        "sendInBlueApi": {
+          "id": "ncS9L9MHqurcMXFw",
+          "name": "Brevo account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "owner": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "repository": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        }
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        1140,
+        20
+      ],
+      "id": "d31482dd-fff9-40ed-9e54-2482eb4cc4ff",
+      "name": "Create a file",
+      "webhookId": "23fa63ac-75ca-40bf-ba06-58d64fce6727",
+      "credentials": {
+        "githubApi": {
+          "id": "I1cYP94kQZZULbBd",
+          "name": "GitHub account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "List files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many workflows": {
+      "main": [
+        [
+          {
+            "node": "GetRawJSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GetRawJSON": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit a file": {
+      "main": [
+        [
+          {
+            "node": "Send a transactional email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit a file",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "List files": {
+      "main": [
+        [
+          {
+            "node": "Get many workflows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a transactional email": {
+      "main": [
+        []
+      ]
+    },
+    "Create a file": {
+      "main": [
+        [
+          {
+            "node": "Send a transactional email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "4aa65040-28b1-484a-aa52-9bbc91c3d3a3",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2025-07-17T19:28:39.110Z",
+      "updatedAt": "2025-07-17T19:28:39.110Z",
+      "id": "9sT03570m59C5AA7",
+      "name": "workflow"
+    },
+    {
+      "createdAt": "2025-07-09T18:56:11.175Z",
+      "updatedAt": "2025-07-09T18:56:11.175Z",
+      "id": "RfmN4qRDZ91mwL9R",
+      "name": "backup"
+    },
+    {
+      "createdAt": "2025-07-17T19:28:41.771Z",
+      "updatedAt": "2025-07-17T19:28:41.771Z",
+      "id": "cNdOQ1W5spkFXO5E",
+      "name": "automation"
+    },
+    {
+      "createdAt": "2025-07-17T19:28:34.094Z",
+      "updatedAt": "2025-07-17T19:28:34.094Z",
+      "id": "nkXWm8NCyneUBOxK",
+      "name": "github"
+    }
+  ]
+}
