@@ -1,0 +1,49 @@
+{
+  "createdAt": "2025-07-08T18:49:52.680Z",
+  "updatedAt": "2025-07-10T18:18:09.000Z",
+  "id": "vEE2TwXz3hZO4ych",
+  "name": "My workflow",
+  "active": false,
+  "isArchived": true,
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "custom",
+              "cronExpression": "*/15 * * * * *"
+            }
+          ]
+        },
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "3c5d8449-52f4-4673-82a0-3869139bf725",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "CEXPrzvB3G0JRslX",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "connections": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "33f0d78c-4878-4b20-bc27-8f1eb87f57c1",
+  "triggerCount": 0,
+  "tags": []
+}
