@@ -1,0 +1,127 @@
+{
+  "createdAt": "2025-07-08T18:11:13.874Z",
+  "updatedAt": "2025-07-09T18:56:16.000Z",
+  "id": "txcfpknT2RshJc9K",
+  "name": "MySQL Backup to Amazon S3",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 5,
+              "triggerAtMinute": 10
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -560,
+        -340
+      ],
+      "id": "76922aab-03ae-4f0c-901e-4530362b482a",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "command": "echo \"This is a test from n8n\""
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -340,
+        -400
+      ],
+      "id": "67a71206-ec95-4196-a1b7-c7a1750b87fe",
+      "name": "Execute Command"
+    },
+    {
+      "parameters": {
+        "operation": "upload",
+        "bucketName": "auto-n8n-testing",
+        "fileName": "test-document.txt",
+        "binaryData": false,
+        "fileContent": "This is a test document",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.awsS3",
+      "typeVersion": 2,
+      "position": [
+        -120,
+        -340
+      ],
+      "id": "2cd214a8-098d-492e-9e13-0b3b4f71597c",
+      "name": "Upload a file",
+      "credentials": {
+        "aws": {
+          "id": "miOOREcUbEsSqZQ5",
+          "name": "AWS account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Execute Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Command": {
+      "main": [
+        [
+          {
+            "node": "Upload a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "a924c9ca-838b-4b1b-ac09-a20a778dfe58",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2025-07-09T18:56:14.124Z",
+      "updatedAt": "2025-07-09T18:56:14.124Z",
+      "id": "6HnwvB80Hp5jY8Vy",
+      "name": "s3"
+    },
+    {
+      "createdAt": "2025-07-09T18:56:02.591Z",
+      "updatedAt": "2025-07-09T18:56:02.591Z",
+      "id": "AUddyeIZmewtMitI",
+      "name": "mysql"
+    },
+    {
+      "createdAt": "2025-07-09T18:56:11.175Z",
+      "updatedAt": "2025-07-09T18:56:11.175Z",
+      "id": "RfmN4qRDZ91mwL9R",
+      "name": "backup"
+    },
+    {
+      "createdAt": "2025-07-09T18:56:15.483Z",
+      "updatedAt": "2025-07-09T18:56:15.483Z",
+      "id": "rMNZLBBJDUAIJPze",
+      "name": "aws"
+    }
+  ]
+}
