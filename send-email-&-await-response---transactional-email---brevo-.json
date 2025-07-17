@@ -1,0 +1,70 @@
+{
+  "createdAt": "2025-07-10T19:58:37.446Z",
+  "updatedAt": "2025-07-10T20:11:22.000Z",
+  "id": "FHS8jmYWEajyZgh8",
+  "name": "Send Email & Await Response - Transactional Email - Brevo",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "01211bb0-8fd2-4df0-8b0a-e8484899cde3",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "fromEmail": "admin@jetbeans.net",
+        "toEmail": "craig@craigderington.dev",
+        "subject": "Approval Required",
+        "message": "Your approval is required for this invoice.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        220,
+        0
+      ],
+      "id": "24750eca-4814-4d03-930e-40bb1dd8d602",
+      "name": "SendAndWait email",
+      "webhookId": "554aa5fb-d0cf-47c5-9752-d0b9b42d6a28",
+      "credentials": {
+        "smtp": {
+          "id": "uHTDN9bH6sGGzCwN",
+          "name": "SMTP account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "SendAndWait email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "22c92969-2eb1-4fee-8fb9-9cbb1f7e85a4",
+  "triggerCount": 0,
+  "tags": []
+}
